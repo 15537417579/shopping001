@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--这是一个主配置文件，里面有数据库的连接，和sql的映射-->
+    <properties resource="db.properties"/>
+
+    <settings>
+        <!--延迟加载-->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <!--按需要查询-->
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+
+    <!--配置分页插件-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <!--配置方言-->
+            <property name="dialect" value="mysql"/>
+        </plugin>
+    </plugins>
+
+</configuration>

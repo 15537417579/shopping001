@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sg.mapper.UserInfoMapper">
+  <resultMap id="BaseResultMap" type="com.sg.entity.UserInfo">
+    <id column="USER_ID" jdbcType="INTEGER" property="userId" />
+    <result column="USER_NAME" jdbcType="CHAR" property="userName" />
+    <result column="PASSWORD" jdbcType="CHAR" property="password" />
+    <result column="PET_NAME" jdbcType="CHAR" property="petName" />
+    <result column="NAME" jdbcType="CHAR" property="name" />
+    <result column="SEX" jdbcType="CHAR" property="sex" />
+    <result column="AGE" jdbcType="CHAR" property="age" />
+    <result column="ID_NUM" jdbcType="CHAR" property="idNum" />
+    <result column="BIRTHDAY" jdbcType="DATE" property="birthday" />
+    <result column="TELEPHONE" jdbcType="CHAR" property="telephone" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="STORE_HONOR" jdbcType="INTEGER" property="storeHonor" />
+    <result column="REGISTER_DATE" jdbcType="DATE" property="registerDate" />
+    <result column="REMARKS" jdbcType="VARCHAR" property="remarks" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    USER_ID, USER_NAME, PASSWORD, PET_NAME, NAME, SEX, AGE, ID_NUM, BIRTHDAY, TELEPHONE, 
+    ADDRESS, STORE_HONOR, REGISTER_DATE, REMARKS
+  </sql>
+  <select id="selectByUserName" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_info
+    where user_name = #{userName}
+  </select>
+  <select id="login" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user_info
+    where user_name = #{userName} and password = #{password}
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user_info
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user_info
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sg.entity.UserInfo">
+    insert into user_info (USER_ID, USER_NAME, PASSWORD, 
+      PET_NAME, NAME, SEX, AGE, 
+      ID_NUM, BIRTHDAY, TELEPHONE, 
+      ADDRESS, STORE_HONOR, REGISTER_DATE, 
+      REMARKS)
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=CHAR}, #{password,jdbcType=CHAR}, 
+      #{petName,jdbcType=CHAR}, #{name,jdbcType=CHAR}, #{sex,jdbcType=CHAR}, #{age,jdbcType=CHAR}, 
+      #{idNum,jdbcType=CHAR}, #{birthday,jdbcType=DATE}, #{telephone,jdbcType=CHAR}, 
+      #{address,jdbcType=VARCHAR}, #{storeHonor,jdbcType=INTEGER}, #{registerDate,jdbcType=DATE}, 
+      #{remarks,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sg.entity.UserInfo">
+    insert into user_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="userName != null">
+        USER_NAME,
+      </if>
+      <if test="password != null">
+        PASSWORD,
+      </if>
+      <if test="petName != null">
+        PET_NAME,
+      </if>
+      <if test="name != null">
+        NAME,
+      </if>
+      <if test="sex != null">
+        SEX,
+      </if>
+      <if test="age != null">
+        AGE,
+      </if>
+      <if test="idNum != null">
+        ID_NUM,
+      </if>
+      <if test="birthday != null">
+        BIRTHDAY,
+      </if>
+      <if test="telephone != null">
+        TELEPHONE,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+      <if test="storeHonor != null">
+        STORE_HONOR,
+      </if>
+      <if test="registerDate != null">
+        REGISTER_DATE,
+      </if>
+      <if test="remarks != null">
+        REMARKS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=CHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=CHAR},
+      </if>
+      <if test="petName != null">
+        #{petName,jdbcType=CHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=CHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=CHAR},
+      </if>
+      <if test="age != null">
+        #{age,jdbcType=CHAR},
+      </if>
+      <if test="idNum != null">
+        #{idNum,jdbcType=CHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="telephone != null">
+        #{telephone,jdbcType=CHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="storeHonor != null">
+        #{storeHonor,jdbcType=INTEGER},
+      </if>
+      <if test="registerDate != null">
+        #{registerDate,jdbcType=DATE},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sg.entity.UserInfo">
+    update user_info
+    <set>
+      <if test="userName != null">
+        USER_NAME = #{userName,jdbcType=CHAR},
+      </if>
+      <if test="password != null">
+        PASSWORD = #{password,jdbcType=CHAR},
+      </if>
+      <if test="petName != null">
+        PET_NAME = #{petName,jdbcType=CHAR},
+      </if>
+      <if test="name != null">
+        NAME = #{name,jdbcType=CHAR},
+      </if>
+      <if test="sex != null">
+        SEX = #{sex,jdbcType=CHAR},
+      </if>
+      <if test="age != null">
+        AGE = #{age,jdbcType=CHAR},
+      </if>
+      <if test="idNum != null">
+        ID_NUM = #{idNum,jdbcType=CHAR},
+      </if>
+      <if test="birthday != null">
+        BIRTHDAY = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="telephone != null">
+        TELEPHONE = #{telephone,jdbcType=CHAR},
+      </if>
+      <if test="address != null">
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="storeHonor != null">
+        STORE_HONOR = #{storeHonor,jdbcType=INTEGER},
+      </if>
+      <if test="registerDate != null">
+        REGISTER_DATE = #{registerDate,jdbcType=DATE},
+      </if>
+      <if test="remarks != null">
+        REMARKS = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sg.entity.UserInfo">
+    update user_info
+    set USER_NAME = #{userName,jdbcType=CHAR},
+      PASSWORD = #{password,jdbcType=CHAR},
+      PET_NAME = #{petName,jdbcType=CHAR},
+      NAME = #{name,jdbcType=CHAR},
+      SEX = #{sex,jdbcType=CHAR},
+      AGE = #{age,jdbcType=CHAR},
+      ID_NUM = #{idNum,jdbcType=CHAR},
+      BIRTHDAY = #{birthday,jdbcType=DATE},
+      TELEPHONE = #{telephone,jdbcType=CHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      STORE_HONOR = #{storeHonor,jdbcType=INTEGER},
+      REGISTER_DATE = #{registerDate,jdbcType=DATE},
+      REMARKS = #{remarks,jdbcType=VARCHAR}
+    where USER_ID = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

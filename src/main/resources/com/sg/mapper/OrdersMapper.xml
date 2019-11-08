@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sg.mapper.OrdersMapper">
+  <resultMap id="BaseResultMap" type="com.sg.entity.Orders">
+    <id column="ORDER_ID" jdbcType="INTEGER" property="orderId" />
+    <result column="ORDER_DATE" jdbcType="TIMESTAMP" property="orderDate" />
+    <result column="BUYER_ID" jdbcType="INTEGER" property="buyerId" />
+    <result column="B_PET_NAME" jdbcType="CHAR" property="bPetName" />
+    <result column="SALER_ID" jdbcType="INTEGER" property="salerId" />
+    <result column="SALER_NAME" jdbcType="CHAR" property="salerName" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="TELEPHONE" jdbcType="CHAR" property="telephone" />
+    <result column="BUYER_REMARKS" jdbcType="VARCHAR" property="buyerRemarks" />
+    <result column="STATUS" jdbcType="CHAR" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ORDER_ID, ORDER_DATE, BUYER_ID, B_PET_NAME, SALER_ID, SALER_NAME, ADDRESS, TELEPHONE, 
+    BUYER_REMARKS, STATUS
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where ORDER_ID = #{orderId,jdbcType=INTEGER}
+  </select>
+
+  <!--收集生成订单记录所需要的数据  我们需要返回list<orders>，但字段不匹配，我们用起别名的方式来匹配-->
+  <select id="selectDataForOrders" resultType="orders">
+    select
+    ui_b.USER_ID as buyerId,ui_b.PET_NAME as bPetName,
+    ui_b.ADDRESS as address,ui_b.TELEPHONE as telephone,
+    ui_s.USER_ID as salerId,ui_s.PET_NAME as salerName,'1' as status
+    from cart c
+    left join goods g on c.GOODS_ID = g.GOODS_ID
+    left join user_info ui_b on ui_b.USER_ID = c.MY_CART_ID
+    left join user_info ui_s on ui_s.USER_ID = g.USER_ID
+    where c.CART_ID in
+    <foreach collection="cartIds" item="cartId" open="(" close=")" separator=",">
+      #{cartId}
+    </foreach>
+    and c.MY_CART_ID = #{userId}
+    group by g.USER_ID
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from orders
+    where ORDER_ID = #{orderId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sg.entity.Orders">
+    insert into orders (ORDER_ID, ORDER_DATE, BUYER_ID, 
+      B_PET_NAME, SALER_ID, SALER_NAME, 
+      ADDRESS, TELEPHONE, BUYER_REMARKS, 
+      STATUS)
+    values (#{orderId,jdbcType=INTEGER}, #{orderDate,jdbcType=TIMESTAMP}, #{buyerId,jdbcType=INTEGER},
+      #{bPetName,jdbcType=CHAR}, #{salerId,jdbcType=INTEGER}, #{salerName,jdbcType=CHAR}, 
+      #{address,jdbcType=VARCHAR}, #{telephone,jdbcType=CHAR}, #{buyerRemarks,jdbcType=VARCHAR}, 
+      #{status,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sg.entity.Orders">
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        ORDER_ID,
+      </if>
+      <if test="orderDate != null">
+        ORDER_DATE,
+      </if>
+      <if test="buyerId != null">
+        BUYER_ID,
+      </if>
+      <if test="bPetName != null">
+        B_PET_NAME,
+      </if>
+      <if test="salerId != null">
+        SALER_ID,
+      </if>
+      <if test="salerName != null">
+        SALER_NAME,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+      <if test="telephone != null">
+        TELEPHONE,
+      </if>
+      <if test="buyerRemarks != null">
+        BUYER_REMARKS,
+      </if>
+      <if test="status != null">
+        STATUS,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+      <if test="orderDate != null">
+        #{orderDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyerId != null">
+        #{buyerId,jdbcType=INTEGER},
+      </if>
+      <if test="bPetName != null">
+        #{bPetName,jdbcType=CHAR},
+      </if>
+      <if test="salerId != null">
+        #{salerId,jdbcType=INTEGER},
+      </if>
+      <if test="salerName != null">
+        #{salerName,jdbcType=CHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        #{telephone,jdbcType=CHAR},
+      </if>
+      <if test="buyerRemarks != null">
+        #{buyerRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sg.entity.Orders">
+    update orders
+    <set>
+      <if test="orderDate != null">
+        ORDER_DATE = #{orderDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyerId != null">
+        BUYER_ID = #{buyerId,jdbcType=INTEGER},
+      </if>
+      <if test="bPetName != null">
+        B_PET_NAME = #{bPetName,jdbcType=CHAR},
+      </if>
+      <if test="salerId != null">
+        SALER_ID = #{salerId,jdbcType=INTEGER},
+      </if>
+      <if test="salerName != null">
+        SALER_NAME = #{salerName,jdbcType=CHAR},
+      </if>
+      <if test="address != null">
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        TELEPHONE = #{telephone,jdbcType=CHAR},
+      </if>
+      <if test="buyerRemarks != null">
+        BUYER_REMARKS = #{buyerRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        STATUS = #{status,jdbcType=CHAR},
+      </if>
+    </set>
+    where ORDER_ID = #{orderId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sg.entity.Orders">
+    update orders
+    set ORDER_DATE = #{orderDate,jdbcType=TIMESTAMP},
+      BUYER_ID = #{buyerId,jdbcType=INTEGER},
+      B_PET_NAME = #{bPetName,jdbcType=CHAR},
+      SALER_ID = #{salerId,jdbcType=INTEGER},
+      SALER_NAME = #{salerName,jdbcType=CHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      TELEPHONE = #{telephone,jdbcType=CHAR},
+      BUYER_REMARKS = #{buyerRemarks,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=CHAR}
+    where ORDER_ID = #{orderId,jdbcType=INTEGER}
+  </update>
+</mapper>

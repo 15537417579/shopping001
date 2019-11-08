@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sg.mapper.GoodsMapper">
+  <resultMap id="BaseResultMap" type="com.sg.entity.Goods">
+    <id column="GOODS_ID" jdbcType="INTEGER" property="goodsId" />
+    <result column="GOODS_NAME" jdbcType="CHAR" property="goodsName" />
+    <result column="USER_ID" jdbcType="INTEGER" property="userId" />
+    <result column="GT_ID" jdbcType="INTEGER" property="gtId" />
+    <result column="SPEC" jdbcType="CHAR" property="spec" />
+    <result column="UNIT_PRICE" jdbcType="DECIMAL" property="unitPrice" />
+    <result column="STOCK" jdbcType="INTEGER" property="stock" />
+    <result column="IMG_URL" jdbcType="VARCHAR" property="imgUrl" />
+    <result column="INTRODUCE" jdbcType="VARCHAR" property="introduce" />
+    <result column="VAILD_DATE" jdbcType="DATE" property="vaildDate" />
+  </resultMap>
+  <!--SLQ语句片段-->
+  <sql id="Base_Column_List">
+    GOODS_ID, GOODS_NAME, USER_ID, GT_ID, SPEC, UNIT_PRICE, STOCK, IMG_URL, INTRODUCE, 
+    VAILD_DATE
+  </sql>
+
+  <!--查找所有商品-->
+  <select id="findAllGoods" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from goods
+  </select>
+
+  <!--分页查找所有商品-->
+  <select id="findGoodsListByPage" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from goods limit #{firstPage},#{pageCount}
+  </select>
+
+  <!--条件查找所有商品的数量-->
+  <select id="findGoodsCountByCon" resultType="int">
+    select
+    count(1)
+    from goods
+    <where><!--查找所有商品条件是 模糊查询-->
+      <if test="goodsNameCon != null and goodsNameCon != '' ">
+        and GOODS_NAME like concat('%',#{goodsNameCon},'%')
+      </if>
+      <if test="priceBeginCon != null ">
+        <!--查找所有商品条件是 价格最小值-->
+        and UNIT_PRICE <![CDATA[>=]]> #{priceBeginCon}
+      </if>
+      <if test="priceEndCon != null  ">
+        <!--查找所有商品条件是  价格最大值-->
+        and UNIT_PRICE <![CDATA[<=]]> #{priceEndCon}
+      </if>
+      <if test="gtIdCon != null and gtIdCon != 0 ">
+        <!--查找所有商品条件是  商品类别-->
+        and GT_ID = #{gtIdCon}
+      </if>
+    </where>
+  </select>
+
+
+
+
+  <!--条件查找所有商品列表并分页-->
+  <select id="findGoodsListByPageAndCon" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from goods
+    <where><!--查找所有商品条件是 模糊查询-->
+      <if test="goodsCon.goodsNameCon != null and goodsCon.goodsNameCon != '' ">
+        and GOODS_NAME like concat('%',#{goodsCon.goodsNameCon},'%')
+      </if>
+      <if test="goodsCon.priceBeginCon != null ">
+        <!--查找所有商品条件是 价格最小值-->
+        and UNIT_PRICE <![CDATA[>=]]> #{goodsCon.priceBeginCon}
+      </if>
+      <if test="goodsCon.priceEndCon != null  ">
+        <!--查找所有商品条件是  价格最大值-->
+        and UNIT_PRICE <![CDATA[<=]]> #{goodsCon.priceEndCon}
+      </if>
+      <if test="goodsCon.gtIdCon != null and goodsCon.gtIdCon != 0 ">
+        <!--查找所有商品条件是  商品类别-->
+        and GT_ID = #{goodsCon.gtIdCon}
+      </if>
+    </where>
+    limit #{pageBean.firstPage},#{pageBean.pageCount}
+  </select>
+
+
+
+
+  <!--通过主键查找商品-->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from goods
+    where GOODS_ID = #{goodsId,jdbcType=INTEGER}
+  </select>
+
+
+
+  <!--通过主键删除商品-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from goods
+    where GOODS_ID = #{goodsId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sg.entity.Goods">
+    insert into goods (GOODS_ID, GOODS_NAME, USER_ID, 
+      GT_ID, SPEC, UNIT_PRICE, 
+      STOCK, IMG_URL, INTRODUCE, 
+      VAILD_DATE)
+    values (#{goodsId,jdbcType=INTEGER}, #{goodsName,jdbcType=CHAR}, #{userId,jdbcType=INTEGER}, 
+      #{gtId,jdbcType=INTEGER}, #{spec,jdbcType=CHAR}, #{unitPrice,jdbcType=DECIMAL}, 
+      #{stock,jdbcType=INTEGER}, #{imgUrl,jdbcType=VARCHAR}, #{introduce,jdbcType=VARCHAR}, 
+      #{vaildDate,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sg.entity.Goods">
+    insert into goods
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="goodsId != null">
+        GOODS_ID,
+      </if>
+      <if test="goodsName != null">
+        GOODS_NAME,
+      </if>
+      <if test="userId != null">
+        USER_ID,
+      </if>
+      <if test="gtId != null">
+        GT_ID,
+      </if>
+      <if test="spec != null">
+        SPEC,
+      </if>
+      <if test="unitPrice != null">
+        UNIT_PRICE,
+      </if>
+      <if test="stock != null">
+        STOCK,
+      </if>
+      <if test="imgUrl != null">
+        IMG_URL,
+      </if>
+      <if test="introduce != null">
+        INTRODUCE,
+      </if>
+      <if test="vaildDate != null">
+        VAILD_DATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsName != null">
+        #{goodsName,jdbcType=CHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="gtId != null">
+        #{gtId,jdbcType=INTEGER},
+      </if>
+      <if test="spec != null">
+        #{spec,jdbcType=CHAR},
+      </if>
+      <if test="unitPrice != null">
+        #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="stock != null">
+        #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl != null">
+        #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null">
+        #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="vaildDate != null">
+        #{vaildDate,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sg.entity.Goods">
+    update goods
+    <set>
+      <if test="goodsName != null">
+        GOODS_NAME = #{goodsName,jdbcType=CHAR},
+      </if>
+      <if test="userId != null">
+        USER_ID = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="gtId != null">
+        GT_ID = #{gtId,jdbcType=INTEGER},
+      </if>
+      <if test="spec != null">
+        SPEC = #{spec,jdbcType=CHAR},
+      </if>
+      <if test="unitPrice != null">
+        UNIT_PRICE = #{unitPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="stock != null">
+        STOCK = #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl != null">
+        IMG_URL = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null">
+        INTRODUCE = #{introduce,jdbcType=VARCHAR},
+      </if>
+      <if test="vaildDate != null">
+        VAILD_DATE = #{vaildDate,jdbcType=DATE},
+      </if>
+    </set>
+    where GOODS_ID = #{goodsId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sg.entity.Goods">
+    update goods
+    set GOODS_NAME = #{goodsName,jdbcType=CHAR},
+      USER_ID = #{userId,jdbcType=INTEGER},
+      GT_ID = #{gtId,jdbcType=INTEGER},
+      SPEC = #{spec,jdbcType=CHAR},
+      UNIT_PRICE = #{unitPrice,jdbcType=DECIMAL},
+      STOCK = #{stock,jdbcType=INTEGER},
+      IMG_URL = #{imgUrl,jdbcType=VARCHAR},
+      INTRODUCE = #{introduce,jdbcType=VARCHAR},
+      VAILD_DATE = #{vaildDate,jdbcType=DATE}
+    where GOODS_ID = #{goodsId,jdbcType=INTEGER}
+  </update>
+</mapper>

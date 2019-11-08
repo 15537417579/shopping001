@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sg.mapper.CartMapper">
+  <!--基本的返回值映射-->
+  <resultMap id="BaseResultMap" type="com.sg.entity.Cart">
+    <id column="CART_ID" jdbcType="INTEGER" property="cartId" />
+    <result column="MY_CART_ID" jdbcType="INTEGER" property="myCartId" />
+    <result column="GOODS_ID" jdbcType="INTEGER" property="goodsId" />
+    <result column="AMOUNT" jdbcType="INTEGER" property="amount" />
+  </resultMap>
+  <!--购物车列表的返回值-->
+  <resultMap id="CartListResultMap" type="com.sg.entity.CartVo">
+    <result column="PET_NAME" jdbcType="CHAR" property="petName" />
+    <collection property="list" ofType="com.sg.entity.GoodsVo">
+      <!--商品部分信息-->
+      <id column="GOODS_ID" jdbcType="INTEGER" property="goodsId" />
+      <result column="GOODS_NAME" jdbcType="CHAR" property="goodsName" />
+      <result column="UNIT_PRICE" jdbcType="DECIMAL" property="unitPrice" />
+      <result column="STOCK" jdbcType="INTEGER" property="stock" />
+      <result column="IMG_URL" jdbcType="VARCHAR" property="imgUrl" />
+      <!--购物车的部分详情-->
+      <result column="CART_ID" jdbcType="INTEGER" property="cartId" />
+      <result column="AMOUNT" jdbcType="INTEGER" property="amount" />
+    </collection>
+  </resultMap>
+  <!-- sql片段 -->
+  <sql id="Base_Column_List">
+    CART_ID, MY_CART_ID, GOODS_ID, AMOUNT
+  </sql>
+  <!-- 通过主键查询 -->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cart
+    where CART_ID = #{cartId,jdbcType=INTEGER}
+  </select>
+
+  <!--查询购物车列表并返回展示-->
+  <select id="getCartList" resultMap="CartListResultMap">
+  SELECT
+    c.CART_ID,c.AMOUNT,
+    g.GOODS_NAME,g.IMG_URL,g.STOCK,g.UNIT_PRICE,g.GOODS_ID,
+    ui.PET_NAME
+    FROM cart c
+      LEFT JOIN goods g ON g.GOODS_ID=c.GOODS_ID
+	  LEFT JOIN user_info ui ON g.USER_ID = ui.USER_ID
+		 WHERE c.MY_CART_ID= #{userId}
+  </select>
+
+  <!-- 通过主键删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cart
+    where CART_ID = #{cartId,jdbcType=INTEGER}
+  </delete>
+  <!-- 插入新的数据 -->
+  <insert id="insert" parameterType="com.sg.entity.Cart">
+    insert into cart (CART_ID, MY_CART_ID, GOODS_ID, 
+      AMOUNT)
+    values (#{cartId,jdbcType=INTEGER}, #{myCartId,jdbcType=INTEGER}, #{goodsId,jdbcType=INTEGER}, 
+      #{amount,jdbcType=INTEGER})
+  </insert>
+  <!-- 选择性插入 -->
+  <insert id="insertSelective" parameterType="com.sg.entity.Cart">
+    insert into cart
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="cartId != null">
+        CART_ID,
+      </if>
+      <if test="myCartId != null">
+        MY_CART_ID,
+      </if>
+      <if test="goodsId != null">
+        GOODS_ID,
+      </if>
+      <if test="amount != null">
+        AMOUNT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="cartId != null">
+        #{cartId,jdbcType=INTEGER},
+      </if>
+      <if test="myCartId != null">
+        #{myCartId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null">
+        #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <!-- 通过主键选择性更新 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.sg.entity.Cart">
+    update cart
+    <set>
+      <if test="myCartId != null">
+        MY_CART_ID = #{myCartId,jdbcType=INTEGER},
+      </if>
+      <if test="goodsId != null">
+        GOODS_ID = #{goodsId,jdbcType=INTEGER},
+      </if>
+      <if test="amount != null">
+        AMOUNT = #{amount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where CART_ID = #{cartId,jdbcType=INTEGER}
+  </update>
+  <!-- 通过主键更新主键 -->
+  <update id="updateByPrimaryKey" parameterType="com.sg.entity.Cart">
+    update cart
+    set MY_CART_ID = #{myCartId,jdbcType=INTEGER},
+      GOODS_ID = #{goodsId,jdbcType=INTEGER},
+      AMOUNT = #{amount,jdbcType=INTEGER}
+    where CART_ID = #{cartId,jdbcType=INTEGER}
+  </update>
+</mapper>
