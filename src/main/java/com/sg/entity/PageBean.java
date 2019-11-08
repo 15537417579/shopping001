@@ -5,6 +5,8 @@ import lombok.Data;
 import java.util.List;
 @Data
 public class PageBean<T> {
+
+    // success
     private Integer pageCount=10;//每页需要显示几条记录
     private Integer totalCount;//共有多少条记录
     private Integer totalPage;//总页数
