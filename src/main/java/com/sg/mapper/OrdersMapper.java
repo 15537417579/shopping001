@@ -20,7 +20,7 @@ public interface OrdersMapper extends BaseMapper<Orders> {
     int updateByPrimaryKey(Orders record);
 
     /**
-     * 插入订单
+     * 插入
      * @param cartId
      * @param userId
      * @return
