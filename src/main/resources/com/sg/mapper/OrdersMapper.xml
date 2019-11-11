@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sg.mapper.OrdersMapper">
+
+  <!--基本映射-->
   <resultMap id="BaseResultMap" type="com.sg.entity.Orders">
     <id column="ORDER_ID" jdbcType="INTEGER" property="orderId" />
     <result column="ORDER_DATE" jdbcType="TIMESTAMP" property="orderDate" />
@@ -13,6 +15,19 @@
     <result column="BUYER_REMARKS" jdbcType="VARCHAR" property="buyerRemarks" />
     <result column="STATUS" jdbcType="CHAR" property="status" />
   </resultMap>
+
+  <!--购物车列表专用映射-->
+  <resultMap id="OrderListResultMap" type="com.sg.entity.OrdersVO">
+    <id column="ORDER_ID" jdbcType="INTEGER" property="ordersId" />
+    <result column="SALER_NAME" jdbcType="CHAR" property="petName" />
+    <collection property="list" ofType="com.sg.entity.GoodsVo">
+      <id column="GOODS_ID" jdbcType="INTEGER" property="goodsId" />
+      <result column="GOODS_NAME" jdbcType="CHAR" property="goodsName" />
+      <result column="UNIT_PRICE" jdbcType="DECIMAL" property="unitPrice" />
+      <result column="AMOUNT" jdbcType="INTEGER" property="amount" />
+    </collection>
+  </resultMap>
+
   <!--sql片段-->
   <sql id="Base_Column_List">
     ORDER_ID, ORDER_DATE, BUYER_ID, B_PET_NAME, SALER_ID, SALER_NAME, ADDRESS, TELEPHONE, 
@@ -59,6 +74,19 @@
     </foreach>
   </select>
 
+  <!--提交订单后进入的页面所需数据（付款之前） selectOrderList-->
+  <select id="selectOrderList" resultMap="OrderListResultMap">
+    select
+    o.ORDER_ID,o.SALER_NAME,
+    og.GOODS_ID,og.GOODS_NAME,og.AMOUNT,og.UNIT_PRICE
+    From orders o
+    left join order_goods og on og.ORDER_ID = o.ORDER_ID
+    where o.ORDER_ID in
+    <foreach collection="list" item="orderIds" separator="," open="(" close=")">
+      #{orderIds}
+    </foreach>
+  </select>
+
 
   <!--通过主键删除订单-->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -78,7 +106,7 @@
       #{status,jdbcType=CHAR})
   </insert>
 
-    <insert id="insertBatch" parameterType="com.sg.entity.Orders" useGeneratedKeys="true" keyColumn="ORDER_ID" keyProperty="orderId">
+   <!-- <insert id="insertBatch" parameterType="com.sg.entity.Orders" useGeneratedKeys="true" keyColumn="ORDER_ID" keyProperty="orderId">
         insert into orders (ORDER_ID, ORDER_DATE, BUYER_ID,
         B_PET_NAME, SALER_ID, SALER_NAME,
         ADDRESS, TELEPHONE, BUYER_REMARKS,
@@ -88,9 +116,9 @@
             (null,null,#{orders.buyerId},#{orders.bPetName},#{orders.salerId},
             #{orders.salerName},#{orders.address},#{orders.telephone},#{orders.buyerRemarks},#{orders.status})
         </foreach>
-    </insert>
+    </insert>-->
 
-<!--  &lt;!&ndash;批量插入订单 并返回主键&ndash;&gt;
+  <!--批量插入订单 并返回主键-->
   <insert id="insertBatch" parameterType="com.sg.entity.Orders" useGeneratedKeys="true" keyColumn="ORDER_ID" keyProperty="orderId">
     insert into orders (ORDER_ID, ORDER_DATE, BUYER_ID,
       B_PET_NAME, SALER_ID, SALER_NAME,
@@ -98,14 +126,14 @@
       STATUS)
 
     values
-    <foreach collection="ordersList" item="orders" separator=",">
+    <foreach collection="list" item="orders" separator=",">
       (null, null, #{orders.buyerId},
       #{orders.bPetName}, #{orders.salerId}, #{orders.salerName},
       #{orders.address}, #{orders.telephone}, #{orders.buyerRemarks},
       #{orders.status})
     </foreach>
 
-  </insert>-->
+  </insert>
 
 
   <!--选择性插入订单-->

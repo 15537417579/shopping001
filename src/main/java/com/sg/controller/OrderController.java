@@ -1,6 +1,7 @@
 package com.sg.controller;
 
 import com.sg.entity.Orders;
+import com.sg.entity.OrdersVO;
 import com.sg.entity.ResponseResult;
 import com.sg.entity.UserInfo;
 import com.sg.service.OrderService;
@@ -31,6 +32,12 @@ public class OrderController extends BaseController{
 
 
         return new ResponseResult("okla",s);
+    }
+
+    @RequestMapping("getOrderList")
+    public ResponseResult getOrderList(@RequestBody List<Integer> orderIds){
+        List<OrdersVO> list = orderService.selectOrderList(orderIds);
+        return new ResponseResult("ok",list);
     }
 
 }

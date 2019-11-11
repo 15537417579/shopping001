@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sg.entity.Cart;
 import com.sg.entity.GoodsVo;
 import com.sg.entity.Orders;
+import com.sg.entity.OrdersVO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -40,4 +41,6 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      * @return
      */
     List<GoodsVo> selectForOrdersGoods(@Param("list") List<Integer> list);
+
+    List<OrdersVO> selectOrderList(@Param("list")List<Integer> orderIds);
 }

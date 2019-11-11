@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sg.entity.GoodsVo;
 import com.sg.entity.OrderGoods;
 import com.sg.entity.Orders;
+import com.sg.entity.OrdersVO;
 import com.sg.mapper.CartMapper;
 import com.sg.mapper.GoodsMapper;
 import com.sg.mapper.OrderGoodsMapper;
@@ -81,6 +82,11 @@ public class OrderServiceImpl implements OrderService {
 //        去除最后一个括号
         stringBuilder.deleteCharAt(stringBuilder.length()-1);
         return stringBuilder.toString();
+    }
+
+    @Override
+    public List<OrdersVO> selectOrderList(List<Integer> orderIds) {
+        return ordersMapper.selectOrderList(orderIds);
     }
 
 

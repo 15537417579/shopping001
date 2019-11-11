@@ -34,6 +34,6 @@ public interface GoodsMapper extends BaseMapper<Goods> {
 
     List<Goods> findGoodsListByPageAndCon(@Param("pageBean") PageBean pageBean,@Param("goodsCon")GoodsCon goodsCon);
 
-    void updateStock(@Param("amount") Integer amount, @Param("stock") Integer stock);
+    void updateStock(@Param("amount") Integer amount, @Param("goodsId") Integer goodsId);
 
 }
