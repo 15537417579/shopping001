@@ -18,4 +18,9 @@ public class OrderServiceImpl implements OrderService {
     public List<Orders> selectDataForOrders(List<Integer> cartId, Integer userId) {
         return ordersMapper.selectDataForOrders(cartId,userId);
     }
+
+    @Override
+    public void insertBatch(List<Orders> ordersList) {
+        ordersMapper.insertBatch(ordersList);
+    }
 }

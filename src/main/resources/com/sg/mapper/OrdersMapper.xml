@@ -13,10 +13,12 @@
     <result column="BUYER_REMARKS" jdbcType="VARCHAR" property="buyerRemarks" />
     <result column="STATUS" jdbcType="CHAR" property="status" />
   </resultMap>
+  <!--sql片段-->
   <sql id="Base_Column_List">
     ORDER_ID, ORDER_DATE, BUYER_ID, B_PET_NAME, SALER_ID, SALER_NAME, ADDRESS, TELEPHONE, 
     BUYER_REMARKS, STATUS
   </sql>
+  <!--通过主键查询-->
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -41,11 +43,13 @@
     and c.MY_CART_ID = #{userId}
     group by g.USER_ID
   </select>
-
+  <!--通过主键删除订单-->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from orders
     where ORDER_ID = #{orderId,jdbcType=INTEGER}
   </delete>
+
+  <!--插入订单-->
   <insert id="insert" parameterType="com.sg.entity.Orders">
     insert into orders (ORDER_ID, ORDER_DATE, BUYER_ID, 
       B_PET_NAME, SALER_ID, SALER_NAME, 
@@ -56,6 +60,25 @@
       #{address,jdbcType=VARCHAR}, #{telephone,jdbcType=CHAR}, #{buyerRemarks,jdbcType=VARCHAR}, 
       #{status,jdbcType=CHAR})
   </insert>
+
+  <!--批量插入订单-->
+  <insert id="insert" parameterType="com.sg.entity.Orders">
+    insert into orders (ORDER_ID, ORDER_DATE, BUYER_ID,
+      B_PET_NAME, SALER_ID, SALER_NAME,
+      ADDRESS, TELEPHONE, BUYER_REMARKS,
+      STATUS)
+    values
+    <foreach collection="ordersList" item="orders" separator=",">
+      (null, null, #{orders.buyerId},
+      #{orders.bPetName,jdbcType=CHAR}, #{orders.salerId,jdbcType=INTEGER}, #{orders.salerName,jdbcType=CHAR},
+      #{orders.address,jdbcType=VARCHAR}, #{orders.telephone,jdbcType=CHAR}, #{orders.buyerRemarks,jdbcType=VARCHAR},
+      #{orders.status,jdbcType=CHAR})
+    </foreach>
+
+  </insert>
+
+
+  <!--选择性插入订单-->
   <insert id="insertSelective" parameterType="com.sg.entity.Orders">
     insert into orders
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -123,6 +146,8 @@
       </if>
     </trim>
   </insert>
+
+  <!--通过主键选择性更新订单-->
   <update id="updateByPrimaryKeySelective" parameterType="com.sg.entity.Orders">
     update orders
     <set>
@@ -156,6 +181,7 @@
     </set>
     where ORDER_ID = #{orderId,jdbcType=INTEGER}
   </update>
+  <!--通过主键更新订单-->
   <update id="updateByPrimaryKey" parameterType="com.sg.entity.Orders">
     update orders
     set ORDER_DATE = #{orderDate,jdbcType=TIMESTAMP},

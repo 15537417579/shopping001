@@ -26,4 +26,10 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      * @return
      */
     List<Orders> selectDataForOrders(@Param("cartIds") List<Integer> cartId, @Param("userId")Integer userId);
+
+    /**
+     * 批量插入订单
+     * @param ordersList
+     */
+    void insertBatch(@Param("ordersList") List<Orders> ordersList);
 }

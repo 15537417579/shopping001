@@ -28,6 +28,7 @@ public class OrderController extends BaseController{
 
        List<Orders> ordersList = orderService.selectDataForOrders(cartIds,userId);
 
+        orderService.insertBatch(ordersList);
         for (Orders orders : ordersList) {
             System.out.println("订单的信息："+orders);
         }
