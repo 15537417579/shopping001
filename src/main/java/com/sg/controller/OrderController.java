@@ -23,16 +23,14 @@ public class OrderController extends BaseController{
 
     @RequestMapping("submitOrders")
     public ResponseResult submitOrders(@RequestBody List<Integer> cartIds, HttpSession session){
+//       获取userId
         Integer userId = ((UserInfo) session.getAttribute("user")).getUserId();
+//        调用业务方法
+        String s = orderService.submitOrders(cartIds, userId);
+//        返回消息
 
 
-       List<Orders> ordersList = orderService.selectDataForOrders(cartIds,userId);
-
-        orderService.insertBatch(ordersList);
-        for (Orders orders : ordersList) {
-            System.out.println("订单的信息："+orders);
-        }
-        return new ResponseResult("okla",ordersList);
+        return new ResponseResult("okla",s);
     }
 
 }

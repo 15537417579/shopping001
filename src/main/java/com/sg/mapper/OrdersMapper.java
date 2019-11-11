@@ -2,6 +2,7 @@ package com.sg.mapper;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.sg.entity.Cart;
+import com.sg.entity.GoodsVo;
 import com.sg.entity.Orders;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,5 +32,12 @@ public interface OrdersMapper extends BaseMapper<Orders> {
      * 批量插入订单
      * @param ordersList
      */
-    void insertBatch(@Param("ordersList") List<Orders> ordersList);
+    void insertBatch( List<Orders> ordersList);
+
+    /**
+     * 是通过cartId查询goodVo
+     * @param list
+     * @return
+     */
+    List<GoodsVo> selectForOrdersGoods(@Param("list") List<Integer> list);
 }

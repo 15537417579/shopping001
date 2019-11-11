@@ -98,6 +98,8 @@
 			})
 	}
         //----------------------------------------------------
+
+
 		//动态处理 提交
 		$('body').on('click','#submitOrders',function () {
 
@@ -112,6 +114,8 @@
 					contentType:'application/json',
 					success:function(data) {
 						console.log(JSON.stringify(data))
+						var orderIds = data.object;
+						window.location.href="orderSubmit.jsp?orderIds="+orderIds;
 					}
 				})
 			}else{

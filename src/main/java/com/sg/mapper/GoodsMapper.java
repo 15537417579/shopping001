@@ -33,4 +33,7 @@ public interface GoodsMapper extends BaseMapper<Goods> {
     Integer findGoodsCountByCon(GoodsCon goodsCon);
 
     List<Goods> findGoodsListByPageAndCon(@Param("pageBean") PageBean pageBean,@Param("goodsCon")GoodsCon goodsCon);
+
+    void updateStock(@Param("amount") Integer amount, @Param("stock") Integer stock);
+
 }

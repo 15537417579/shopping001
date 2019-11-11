@@ -13,6 +13,8 @@ public class GoodsVo  implements Serializable {
     private Integer stock;        //5：商品库存
     private String ImgUrl;        //6：商品图片地址
     private Integer amount;       //7：商品数量
+
+    private Integer salerId;      //8:卖家id
     /**
      * c.CART_ID,c.AMOUNT,
      *     g.GOODS_NAME,g.IMG_URL,g.STOCK,g.UNIT_PRICE,

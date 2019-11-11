@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 public class OrderGoods  implements Serializable {
@@ -16,7 +17,7 @@ public class OrderGoods  implements Serializable {
 
     private String goodsName;
 
-    private Long unitPrice;
+    private BigDecimal unitPrice;
 
     private Integer amount;
 

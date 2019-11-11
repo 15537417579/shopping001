@@ -180,6 +180,13 @@
       </if>
     </trim>
   </insert>
+
+  <update id="updateStock">
+    update goods
+    set stock = stock-#{amount}
+    where goods.GOODS_ID= #{goodsId}
+  </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.sg.entity.Goods">
     update goods
     <set>

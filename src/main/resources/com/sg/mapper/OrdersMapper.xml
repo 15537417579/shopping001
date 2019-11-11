@@ -43,6 +43,23 @@
     and c.MY_CART_ID = #{userId}
     group by g.USER_ID
   </select>
+
+  <!--准备生产订单商品表-->
+  <select id="selectForOrdersGoods" resultType="goodsVo">
+        SELECT
+        g.GOODS_ID    goodsId,  c.AMOUNT      amount, -- 商品id 商品数量
+        g.GOODS_NAME  goodsName,g.UNIT_PRICE  unitPrice, <!-- 商品名称 商品单价-->
+        g.USER_ID     salerId                              <!-- 卖家id-->
+        FROM cart c                                      <!-- 购物车表-->
+        LEFT JOIN goods g                                 <!-- 商品表-->
+        ON c.GOODS_ID=g.GOODS_ID
+        where  c.CART_ID IN
+    <foreach collection="list" item="cartId" separator="," open="(" close=")" >
+      #{cartId}
+    </foreach>
+  </select>
+
+
   <!--通过主键删除订单-->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from orders
@@ -61,21 +78,34 @@
       #{status,jdbcType=CHAR})
   </insert>
 
-  <!--批量插入订单-->
-  <insert id="insert" parameterType="com.sg.entity.Orders">
+    <insert id="insertBatch" parameterType="com.sg.entity.Orders" useGeneratedKeys="true" keyColumn="ORDER_ID" keyProperty="orderId">
+        insert into orders (ORDER_ID, ORDER_DATE, BUYER_ID,
+        B_PET_NAME, SALER_ID, SALER_NAME,
+        ADDRESS, TELEPHONE, BUYER_REMARKS,
+        STATUS)
+        values
+        <foreach collection="list" item="orders" separator=",">
+            (null,null,#{orders.buyerId},#{orders.bPetName},#{orders.salerId},
+            #{orders.salerName},#{orders.address},#{orders.telephone},#{orders.buyerRemarks},#{orders.status})
+        </foreach>
+    </insert>
+
+<!--  &lt;!&ndash;批量插入订单 并返回主键&ndash;&gt;
+  <insert id="insertBatch" parameterType="com.sg.entity.Orders" useGeneratedKeys="true" keyColumn="ORDER_ID" keyProperty="orderId">
     insert into orders (ORDER_ID, ORDER_DATE, BUYER_ID,
       B_PET_NAME, SALER_ID, SALER_NAME,
       ADDRESS, TELEPHONE, BUYER_REMARKS,
       STATUS)
+
     values
     <foreach collection="ordersList" item="orders" separator=",">
       (null, null, #{orders.buyerId},
-      #{orders.bPetName,jdbcType=CHAR}, #{orders.salerId,jdbcType=INTEGER}, #{orders.salerName,jdbcType=CHAR},
-      #{orders.address,jdbcType=VARCHAR}, #{orders.telephone,jdbcType=CHAR}, #{orders.buyerRemarks,jdbcType=VARCHAR},
-      #{orders.status,jdbcType=CHAR})
+      #{orders.bPetName}, #{orders.salerId}, #{orders.salerName},
+      #{orders.address}, #{orders.telephone}, #{orders.buyerRemarks},
+      #{orders.status})
     </foreach>
 
-  </insert>
+  </insert>-->
 
 
   <!--选择性插入订单-->
