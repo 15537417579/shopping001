@@ -115,7 +115,7 @@
 					success:function(data) {
 						console.log(JSON.stringify(data))
 						var orderIds = data.object;
-						window.location.href="orderSubmit.jsp?orderIds="+orderIds;
+						window.location.href="orderSubmit1.jsp?orderIds="+orderIds;
 					}
 				})
 			}else{

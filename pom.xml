@@ -277,6 +277,19 @@
             <artifactId>pagehelper</artifactId>
             <version>4.0.0</version>
         </dependency>
+
+        <!--阿里支付-->
+        <dependency>
+            <groupId>com.alipay</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <!--阿里支付源码-->
+        <dependency>
+            <groupId>com.alipay</groupId>
+            <artifactId>alipay-sdk-java-source</artifactId>
+            <version>1.1.1</version>
+        </dependency>
     </dependencies>
 
 
